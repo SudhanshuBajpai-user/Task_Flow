@@ -14,3 +14,4 @@ export const deleteTasks = (id) =>API.delete(`/tasks/${id}`);
 export const logoutUser = () => API.delete("/logout");
 export const completeTasks=(id)=> API.put(`/tasks/complete/${id}`);
 export const profile=()=>API.get("/user");
+export const editTask=(data)=>API.put("/tasks/edit",data);

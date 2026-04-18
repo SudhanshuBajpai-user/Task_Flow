@@ -1,4 +1,10 @@
-export default function TaskList({ title, tasks, onDelete, onComplete }) {
+export default function TaskList({
+  title,
+  tasks,
+  onDelete,
+  onComplete,
+  onEdit,
+}) {
   const pendingTasks = tasks.filter((task) => !task.complete);
 
   return (
@@ -12,17 +18,19 @@ export default function TaskList({ title, tasks, onDelete, onComplete }) {
           {pendingTasks.map((task) => (
             <div
               key={task._id}
-              className="flex justify-between items-center bg-[#020617] p-3 rounded-xl border border-white/5 hover:border-purple-500/40 transition group"
+              onDoubleClick={() => onEdit(task._id)}
+              className="flex justify-between items-center bg-[#020617] p-3 rounded-xl border border-white/5 hover:border-purple-500/40 transition group cursor-pointer"
             >
               <div className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={task.complete || false}
                   onChange={() => onComplete(task._id)}
+                  onClick={(e) => e.stopPropagation()}
                   className="accent-purple-500"
                 />
 
-                <p className="text-sm text-white">
+                <p className="text-sm text-white" title="Double click to edit">
                   {task.title}
                 </p>
               </div>

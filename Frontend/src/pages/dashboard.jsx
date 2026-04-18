@@ -2,7 +2,8 @@ import Sidebar from "../components/layout/Sidebar";
 import Profile from "../components/layout/Profile";
 import StatsCard from "../components/tasks/StatsCard";
 import TaskList from "../components/tasks/TaskList";
-import AddTaskModal from "../components/tasks/AddTaskModel";
+import AddTaskModal from "../components/tasks/AddTaskModel"; // ✅ fixed
+import EditTaskModal from "../components/tasks/EditTasksModel";
 import FloatingButton from "../components/layout/FloatingButton";
 
 import { deleteTasks, logoutUser } from "../services/api";
@@ -15,7 +16,7 @@ import { useTodo } from "../context/listContext";
 import { useState } from "react";
 
 export default function Dashboard() {
-  useStartTask(); // initial fetch
+  useStartTask(); // fetch tasks once
 
   const { tasks, setTasks, loading } = useTodo();
   const navigate = useNavigate();
@@ -23,7 +24,10 @@ export default function Dashboard() {
   const { todayTasks, tomorrowTasks, completed } = useTaskDate(tasks);
   const { completeTask } = useCompleteTask();
 
+  // 🔹 Modal states
   const [isModalOpen, setIsModalOpen] = useState(false);
+  const [isEditOpen, setIsEditOpen] = useState(false);
+  const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   // 🔐 Logout
   const handleLogout = async () => {
@@ -45,30 +49,40 @@ export default function Dashboard() {
     }
   };
 
+  // ✏️ Open Edit Modal
+  const handleEdit = (id) => {
+    setSelectedTaskId(id);
+    setIsEditOpen(true);
+  };
+
   return (
     <div className="min-h-screen flex bg-[#0b1220] text-white">
       {/* Sidebar */}
-      <Sidebar onLogout={handleLogout} navigate={navigate} className="hidden md:flex" />
+      <Sidebar
+        onLogout={handleLogout}
+        navigate={navigate}
+        className="hidden md:flex"
+      />
 
       {/* Main */}
       <main className="flex-1 p-4 md:p-6 space-y-6">
-        {/* 🔥 Header */}
+        {/* Header */}
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-          {/* Profile top-right */}
           <div className="hover:bg-white/10 p-2 rounded-xl transition">
             <Profile />
           </div>
         </div>
 
+        {/* Loading */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
           </div>
         ) : (
           <>
-            {/* 📊 Stats */}
+            {/* Stats */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
               <StatsCard title="Total" value={tasks.length} />
               <StatsCard
@@ -76,15 +90,19 @@ export default function Dashboard() {
                 value={completed.length}
                 color="text-green-400"
               />
-              <StatsCard title="Pending" value={tasks.length - completed.length} />
+              <StatsCard
+                title="Pending"
+                value={tasks.length - completed.length}
+              />
             </div>
 
-            {/* 📋 Task Lists */}
+            {/* Task Lists */}
             <TaskList
               title="Today"
               tasks={todayTasks}
               onDelete={handleDelete}
               onComplete={completeTask}
+              onEdit={handleEdit}
             />
 
             <TaskList
@@ -92,16 +110,25 @@ export default function Dashboard() {
               tasks={tomorrowTasks}
               onDelete={handleDelete}
               onComplete={completeTask}
+              onEdit={handleEdit}
             />
           </>
         )}
 
-        {/* ➕ Add Task (temporary, will replace with modal later) */}
+        {/* Floating Add Button */}
         <FloatingButton onClick={() => setIsModalOpen(true)} />
 
+        {/* Add Task Modal */}
         <AddTaskModal
           isOpen={isModalOpen}
           onClose={() => setIsModalOpen(false)}
+        />
+
+        {/* Edit Task Modal */}
+        <EditTaskModal
+          isOpen={isEditOpen}
+          taskId={selectedTaskId}
+          onClose={() => setIsEditOpen(false)}
         />
       </main>
     </div>
