@@ -1,12 +1,18 @@
 export default function Sidebar({ onLogout, navigate }) {
   return (
-    <aside className="w-64 bg-[#0b1220] border-r border-white/10 flex flex-col">
+    <aside className="w-64 h-screen bg-[#0b1220] border-r border-white/10 flex flex-col">
+      
+      {/* Logo */}
       <div className="p-6 text-xl font-semibold tracking-tight">
         ⚡ TaskFlow
       </div>
 
+      {/* Navigation */}
       <nav className="flex-1 px-3 space-y-2">
-        <button className="w-full flex items-center gap-2 px-4 py-2 rounded-xl bg-purple-600/20 text-purple-400">
+        <button
+          onClick={() => navigate("/")}
+          className="w-full flex items-center gap-2 px-4 py-2 rounded-xl hover:bg-white/5"
+        >
           📊 Dashboard
         </button>
 
@@ -18,10 +24,11 @@ export default function Sidebar({ onLogout, navigate }) {
         </button>
       </nav>
 
-      <div className="p-4 border-t border-white/10">
+      {/* 🔥 FIXED LOGOUT */}
+      <div className="px-4 pb-6 mt-auto">
         <button
           onClick={onLogout}
-          className="w-full py-2 rounded-xl bg-purple-600 hover:bg-purple-700 transition"
+          className="w-full py-2 rounded-xl bg-gradient-to-r from-purple-500 to-pink-500 hover:opacity-90 transition"
         >
           Logout
         </button>

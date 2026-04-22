@@ -8,13 +8,17 @@ import { useStartTask } from "../hooks/useStartTasks";
 import Sidebar from "../components/layout/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { logoutUser, deleteTasks } from "../services/api";
-import { useLocation } from "react-router-dom";
+import CompletedTasks from "../components/tasks/CompletedTasks";
+import FloatingButton from "../components/layout/FloatingButton";
+import AddTaskModal from "../components/tasks/AddTaskModel";
+
 
 export default function Tasks() {
   useStartTask();
+
   const navigate = useNavigate();
-const location = useLocation();
   const { tasks, setTasks } = useTodo();
+
   const {
     todayTasks,
     tomorrowTasks,
@@ -23,12 +27,13 @@ const location = useLocation();
     dueTasks,
   } = useTaskDate(tasks);
 
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   const { completeTask } = useCompleteTask();
 
-  // Logout
   const handleLogout = async () => {
     try {
       await logoutUser();
@@ -38,7 +43,6 @@ const location = useLocation();
     }
   };
 
-  // Delete
   const handleDelete = async (id) => {
     try {
       await deleteTasks(id);
@@ -48,33 +52,26 @@ const location = useLocation();
     }
   };
 
-  // Edit
   const handleEdit = (id) => {
     setSelectedTaskId(id);
     setIsEditOpen(true);
   };
 
   return (
-    <div className="flex min-h-screen bg-[#020617] text-white">
-      
-      {/* Sidebar */}
-      <Sidebar
-        onLogout={handleLogout}
-        navigate={navigate}
-        className="hidden md:flex bg-[#020617]/95"
-      />
+    <div className="flex h-screen bg-[#020617] text-white overflow-hidden">
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 md:p-10 overflow-y-auto">
-        
+      {/* Sidebar (fixed width) */}
+      <Sidebar onLogout={handleLogout} navigate={navigate} />
+
+      {/* Main */}
+      <div className="flex-1 overflow-y-auto px-8 py-8">
+
         {/* Title */}
-        <h1 className="text-3xl font-semibold tracking-tight mb-8 text-white">
-          My Tasks
-        </h1>
+        <h1 className="text-3xl font-semibold mb-8">My Tasks</h1>
 
-        {/* Sections */}
-        <div className="grid gap-8">
-          
+        {/* 🔥 Responsive grid for laptop */}
+        <div className="grid grid-cols-1 xl:grid-cols-2 gap-6">
+
           <TaskList
             title="Today"
             tasks={todayTasks}
@@ -100,29 +97,34 @@ const location = useLocation();
           />
 
           <TaskList
-            title="Completed Tasks"
-            tasks={completedTasks}
-            onDelete={handleDelete}
-            onComplete={completeTask}
-            onEdit={handleEdit}
-          />
-
-          <TaskList
             title="Upcoming Tasks"
             tasks={upcomingTasks}
             onDelete={handleDelete}
             onComplete={completeTask}
             onEdit={handleEdit}
           />
-        </div>
 
-        {/* Modal */}
-        <EditTaskModal
-          isOpen={isEditOpen}
-          taskId={selectedTaskId}
-          onClose={() => setIsEditOpen(false)}
-        />
+          {/* Full width row */}
+          <div className="xl:col-span-2">
+            <CompletedTasks tasks={tasks} onDelete={handleDelete}/>
+          </div>
+
+        </div>
       </div>
+      <FloatingButton onClick={() => setIsModalOpen(true)} />
+      
+              {/* Add Task Modal */}
+              <AddTaskModal
+                isOpen={isModalOpen}
+                onClose={() => setIsModalOpen(false)}
+              />
+      
+      {/* Modal */}
+      <EditTaskModal
+        isOpen={isEditOpen}
+        taskId={selectedTaskId}
+        onClose={() => setIsEditOpen(false)}
+      />
     </div>
   );
 }

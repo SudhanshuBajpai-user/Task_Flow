@@ -1,11 +1,17 @@
 export default function TaskList({
   title,
-  tasks=[],
+  tasks = [],
   onDelete,
   onComplete,
   onEdit,
 }) {
   const pendingTasks = tasks.filter((task) => !task.complete);
+
+  const priorityStyles = {
+    low: "bg-green-500/20 text-green-400",
+    medium: "bg-yellow-500/20 text-yellow-400",
+    high: "bg-red-500/20 text-red-400",
+  };
 
   return (
     <div className="bg-[#0f172a] rounded-2xl shadow-md p-5 border border-gray-800">
@@ -21,8 +27,8 @@ export default function TaskList({
               onDoubleClick={() => onEdit(task._id)}
               className="flex justify-between items-center bg-[#020617] p-3 rounded-xl border border-white/5 hover:border-purple-500/40 transition group cursor-pointer"
             >
-              <div className="flex items-center gap-3 bg-[#020617] hover:bg-[#020617]/80 
-rounded-lg px-4 py-3 transition-all duration-200 cursor-pointer">
+              {/* Left */}
+              <div className="flex items-center gap-3">
                 <input
                   type="checkbox"
                   checked={task.complete || false}
@@ -36,12 +42,27 @@ rounded-lg px-4 py-3 transition-all duration-200 cursor-pointer">
                 </p>
               </div>
 
-              <button
-                onClick={() => onDelete(task._id)}
-                className="opacity-0 group-hover:opacity-100 transition text-red-400 hover:text-red-500"
-              >
-                ✖
-              </button>
+              {/* Right */}
+              <div className="flex items-center gap-3">
+                
+                {/* 🔥 Priority Badge */}
+                <span
+                  className={`
+                    text-xs px-2 py-1 rounded-md capitalize
+                    ${priorityStyles[task.priority] || "bg-gray-500/20 text-gray-400"}
+                  `}
+                >
+                  {task.priority}
+                </span>
+
+                {/* Delete */}
+                <button
+                  onClick={() => onDelete(task._id)}
+                  className="opacity-0 group-hover:opacity-100 transition text-red-400 hover:text-red-500"
+                >
+                  ✖
+                </button>
+              </div>
             </div>
           ))}
         </div>
