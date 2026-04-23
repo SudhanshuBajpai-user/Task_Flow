@@ -5,6 +5,7 @@ import TaskList from "../components/tasks/TaskList";
 import AddTaskModal from "../components/tasks/AddTaskModel"; // ✅ fixed
 import EditTaskModal from "../components/tasks/EditTasksModel";
 import FloatingButton from "../components/layout/FloatingButton";
+import ThemeToggle from "../components/ThemeToggle";
 
 import { deleteTasks, logoutUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -70,7 +71,8 @@ export default function Dashboard() {
         <div className="flex justify-between items-center">
           <h1 className="text-2xl font-semibold">Dashboard</h1>
 
-          <div className="hover:bg-white/10 p-2 rounded-xl transition">
+          <div className="flex items-center gap-2">
+            <ThemeToggle />
             <Profile />
           </div>
         </div>

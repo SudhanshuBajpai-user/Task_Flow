@@ -10,7 +10,7 @@ const postTasks = async (req, res) => {
     const task = await Task.create({
       title,
       priority,
-      date,
+      date: date || new Date().toISOString().split("T")[0],
       complete: false,
       userId: req.session.userId,
     });
@@ -94,4 +94,37 @@ const completeTasks = async (req, res) => {
   }
 };
 
-module.exports={postTasks, getTasks, deleteTasks, completeTasks}
+const editTasks = async (req, res) => {
+  try {
+    const { taskId } = req.params;
+    const { title, priority, date } = req.body;
+
+    const updatedTask = await Task.findByIdAndUpdate(
+      taskId,
+      {
+        title,
+        priority,
+        date: date || new Date().toISOString().split("T")[0],
+      },
+
+    );
+
+    if (!updatedTask) {
+      return res.status(404).json({
+        message: "Task not found",
+      });
+    }
+
+    res.status(200).json({
+      message: "Task updated successfully",
+      task: updatedTask,
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Something went wrong",
+      error: error.message,
+    });
+  }
+};
+
+module.exports={postTasks, getTasks, deleteTasks, completeTasks, editTasks}
