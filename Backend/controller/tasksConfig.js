@@ -1,8 +1,10 @@
-const Task = require("../models/Task")
+const Task = require("../models/Task");
 const postTasks = async (req, res) => {
   try {
     const { title, priority, date } = req.body;
-
+    if (!title || !priority) {
+      return res.status(400).json({ message: "Invalid input" });
+    }
     if (!req.session.userId) {
       return res.status(401).json({ message: "Unauthorized" });
     }
@@ -16,7 +18,6 @@ const postTasks = async (req, res) => {
     });
 
     res.status(201).json(task);
-
   } catch (err) {
     console.error("POST TASK ERROR:", err);
 
@@ -36,7 +37,6 @@ const getTasks = async (req, res) => {
       message: "Tasks fetched successfully",
       tasks: allTasks,
     });
-
   } catch (error) {
     console.error(error);
 
@@ -48,7 +48,10 @@ const getTasks = async (req, res) => {
 
 const deleteTasks = async (req, res) => {
   try {
-    const deletedTask = await Task.findByIdAndDelete(req.params.id);
+    const deletedTask = await Task.findOneAndDelete({
+      _id: req.params.id,
+      userId: req.session.userId,
+    });
     console.log(req.params.id);
     if (!deletedTask) {
       return res.status(404).json({
@@ -85,7 +88,6 @@ const completeTasks = async (req, res) => {
       message: "Task updated successfully",
       task,
     });
-
   } catch (error) {
     res.status(500).json({
       message: "Something went wrong",
@@ -100,13 +102,12 @@ const editTasks = async (req, res) => {
     const { title, priority, date } = req.body;
 
     const updatedTask = await Task.findByIdAndUpdate(
-      taskId,
+      { _id: taskId, userId: req.session.userId },
       {
         title,
         priority,
         date: date || new Date().toISOString().split("T")[0],
       },
-
     );
 
     if (!updatedTask) {
@@ -127,4 +128,4 @@ const editTasks = async (req, res) => {
   }
 };
 
-module.exports={postTasks, getTasks, deleteTasks, completeTasks, editTasks}
+module.exports = { postTasks, getTasks, deleteTasks, completeTasks, editTasks };

@@ -81,7 +81,7 @@ const login = async (req, res) => {
   }
 };
 const cookie = async (req, res) => {
-  console.log("ENtered");
+  console.log("Entered");
 
   try {
     if (!req.session.userId) {
@@ -146,7 +146,6 @@ const userDetails = async (req, res) => {
       });
     }
 
-    // ✅ Send clean response
     res.status(200).json({
       name: user.name,
       email: user.email,

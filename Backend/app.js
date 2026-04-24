@@ -22,7 +22,7 @@ app.use(cors({
 }));
 
 app.use(session({
-  secret: 'your-secret-key',
+  secret: process.env.SESSION_SECRET,
   resave: false,
   saveUninitialized: false,
   store: MongoStore.create({
@@ -31,6 +31,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
+    secure: false,
     maxAge: 1000 * 60 * 60 * 24  // 1 day
   }
 }));
