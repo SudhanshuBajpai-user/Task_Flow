@@ -1,31 +1,30 @@
-import { useNavigate } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
+import { Navigate } from "react-router-dom";
 import { verifyUser } from "../services/api";
 
-const Verify = () => {
-  const navigate = useNavigate();
+export default function Verify({ children }) {
+  const [status, setStatus] = useState("loading");
 
   useEffect(() => {
     const check = async () => {
       try {
-        const res = await verifyUser();
-
-        console.log("Verification success");
-
-        if (res.status === 200) {
-          navigate("/dashboard");
-        }
-
-      } catch (err) {
-        console.log("Verification failed:", err);
-        navigate("/login");
+        await verifyUser();
+        setStatus("success");
+      } catch {
+        setStatus("fail");
       }
     };
 
     check();
-  }, [navigate]);
+  }, []);
 
-  return <div>Checking...</div>;
-};
+  if (status === "loading") {
+    return <div>Checking...</div>;
+  }
 
-export default Verify;
+  if (status === "fail") {
+    return <Navigate to="/login" replace />;
+  }
+
+  return children;
+}

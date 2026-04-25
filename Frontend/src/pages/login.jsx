@@ -30,7 +30,7 @@ function Login() {
 
     if (res.status === 200) {
       toast.success("Login successful!");
-      navigate("/dashboard");
+      navigate("/");
     }
 
   } catch (err) {

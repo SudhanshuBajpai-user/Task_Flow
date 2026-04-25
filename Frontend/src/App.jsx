@@ -12,17 +12,22 @@ function App() {
   return (
     <ThemeProvider>
       <Routes>
-        <Route path="/" element={<Verify />} />
         <Route path="/signup" element={<Signup />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/home" element={<Home />} />
-        <Route path="/dashboard" element={<TodoProvider>
-        <Dashboard />
-      </TodoProvider>} />
-      <Route path="/tasks" element={<TodoProvider>
-        <Tasks />
-      </TodoProvider>} />
-
+        <Route path="/" element={
+          <Verify>
+          <TodoProvider>
+            <Dashboard />
+          </TodoProvider>
+        </Verify>
+        } />
+      <Route path="/tasks" element={
+        <Verify>
+          <TodoProvider>
+            <Tasks />
+          </TodoProvider>
+        </Verify>
+      } />
       </Routes>
     </ThemeProvider>
   );
