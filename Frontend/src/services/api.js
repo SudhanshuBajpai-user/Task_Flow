@@ -15,3 +15,4 @@ export const logoutUser = () => API.delete("/logout");
 export const completeTasks=(id)=> API.put(`/tasks/complete/${id}`);
 export const profile=()=>API.get("/user");
 export const editTask = (id, data) =>API.put(`/tasks/edit/${id}`, data);
+export const verificationLink=(data)=>API.put("/verify-email",data);

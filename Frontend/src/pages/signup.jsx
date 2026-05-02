@@ -32,7 +32,7 @@ function Signup() {
 
     if (res.status === 201) {
       toast.success("Account created successfully!");
-      navigate("/dashboard");
+      navigate("/verify-email",{ state: {email:form.email} });
     }
 
   } catch (err) {
