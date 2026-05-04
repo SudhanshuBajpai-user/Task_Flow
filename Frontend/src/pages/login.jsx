@@ -6,8 +6,7 @@ import { useNavigate, Link } from "react-router-dom";
 import { loginUser } from "../services/api";
 import toast from "react-hot-toast";
 
-
-function Login() {        
+function Login() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [form, setForm] = useState({
@@ -20,31 +19,43 @@ function Login() {
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
-  setLoading(true);
+    e.preventDefault();
 
-  try {
-    const res = await loginUser(form);
-
-    console.log("SUCCESS:", res);
-
-    if (res.status === 200) {
-      toast.success("Login successful!");
-      navigate("/");
+    if (!form.email || !form.password) {
+      toast.error("Please fill all fields");
+      return;
     }
 
-  } catch (err) {
-    console.log("ERROR:", err.response);
+    setLoading(true);
 
-    if (err.response?.status === 400) {
-      toast.error("Invalid credentials");
-    } else {
-      toast.error("Something went wrong");
+    try {
+      const res = await loginUser(form);
+
+      if (res.status === 200) {
+        toast.success("Login successful!");
+        navigate("/");
+      }
+    } catch (err) {
+      console.log("ERROR:", err.response);
+
+      const status = err.response?.status;
+
+      if (status === 400) {
+        toast.error("Invalid credentials");
+      } else if (status === 403) {
+        toast.error("Email not verified");
+        setTimeout(() => {
+          navigate("/verify-email", {
+            state: { email: err.response?.data?.email },
+          });
+        }, 1000);
+      } else {
+        toast.error("Something went wrong");
+      }
+    } finally {
+      setLoading(false);
     }
-  } finally {
-    setLoading(false);
-  }
-};
+  };
 
   return (
     <AuthLayout title="Welcome Back">
@@ -62,7 +73,11 @@ function Login() {
           onChange={handleChange}
         />
 
-        <Button text={loading ? "Logging in..." : "Login"} type="submit" disabled={loading} />
+        <Button
+          text={loading ? "Logging in..." : "Login"}
+          type="submit"
+          disabled={loading}
+        />
 
         <p className="text-sm text-center">
           Don't have an account?{" "}

@@ -7,6 +7,7 @@ import Dashboard from "./pages/dashboard";
 import { TodoProvider } from "./context/listContext";
 import Tasks from "./pages/tasks";
 import { ThemeProvider } from "./context/ThemeContext";
+import VerifyEmail from "./pages/verifyEmail";
 
 function App() {
   return (
@@ -28,8 +29,10 @@ function App() {
           </TodoProvider>
         </Verify>
       } />
+      <Route path="/verify-email" element={<VerifyEmail />} />
       </Routes>
     </ThemeProvider>
+    
   );
 }
 

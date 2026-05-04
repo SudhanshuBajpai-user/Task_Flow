@@ -19,10 +19,6 @@ const signup = async (req, res) => {
       password: hashedPassword,
     });
 
-    req.session.userId = user._id;
-
-    console.log("Session ID:", req.sessionID);
-
     res.status(201).json({
       message: "User registered successfully",
       user: {
@@ -43,10 +39,9 @@ const login = async (req, res) => {
 
     if (!existingUser) {
       return res.status(400).json({
-        message: "User not found",
+        message: "Invalid Credentials",
       });
     }
-    console.log("Checking Password");
 
     const isMatch = await bcrypt.compare(password, existingUser.password);
 
@@ -56,9 +51,14 @@ const login = async (req, res) => {
       });
     }
 
-    req.session.userId = existingUser._id;
+    if (!existingUser.isVerified) {
+      return res.status(403).json({
+        message: "Email not verified",
+        email: existingUser.email,
+      });
+    }
 
-    console.log("Session ID:", req.sessionID);
+    req.session.userId = existingUser._id;
 
     req.session.save((err) => {
       if (err) {
@@ -73,6 +73,7 @@ const login = async (req, res) => {
         },
       });
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -80,9 +81,9 @@ const login = async (req, res) => {
     });
   }
 };
-const cookie = async (req, res) => {
-  console.log("Entered");
 
+
+const cookie = async (req, res) => {
   try {
     if (!req.session.userId) {
       return res.status(401).json({
@@ -98,6 +99,13 @@ const cookie = async (req, res) => {
       });
     }
 
+    if (!user.isVerified) {
+      return res.status(403).json({
+        message: "Email not verified",
+        email: user.email,
+      });
+    }
+
     res.status(200).json({
       message: "User exists",
       user: {
@@ -105,6 +113,7 @@ const cookie = async (req, res) => {
         email: user.email,
       },
     });
+
   } catch (err) {
     console.error(err);
     res.status(500).json({
