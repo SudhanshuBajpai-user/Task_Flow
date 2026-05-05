@@ -59,6 +59,9 @@ export default function VerifyEmail() {
           {loading ? "Sending..." : "Send Verification Link"}
         </button>
 
+        <p className="text-sm text-gray-400 text-center">
+          The verification email can be in the spam folder.
+        </p>
       </div>
     </div>
   );

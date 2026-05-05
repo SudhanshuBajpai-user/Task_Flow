@@ -8,6 +8,8 @@ import { TodoProvider } from "./context/listContext";
 import Tasks from "./pages/tasks";
 import { ThemeProvider } from "./context/ThemeContext";
 import VerifyEmail from "./pages/verifyEmail";
+import Verifying from "./pages/verifying";
+
 
 function App() {
   return (
@@ -30,6 +32,7 @@ function App() {
         </Verify>
       } />
       <Route path="/verify-email" element={<VerifyEmail />} />
+      <Route path="/verify-email/:token" element={<Verifying />} />
       </Routes>
     </ThemeProvider>
     
