@@ -3,7 +3,6 @@ export default function CompletedTasks({
   tasks = [],
   onDelete,
 }) {
-  // ✅ Only completed tasks
   const completed = tasks.filter((task) => Boolean(task.complete));
 
   return (

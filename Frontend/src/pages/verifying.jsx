@@ -15,8 +15,7 @@ export default function Verifying() {
 
       const res = await verifyEmailToken(token);
 
-      console.log("API RESPONSE:", res); // 👈 check this
-
+      console.log("API RESPONSE:", res);
       navigate("/");
 
     } catch (err) {

@@ -6,6 +6,7 @@ import AddTaskModal from "../components/tasks/AddTaskModel"; // ✅ fixed
 import EditTaskModal from "../components/tasks/EditTasksModel";
 import FloatingButton from "../components/layout/FloatingButton";
 import ThemeToggle from "../components/ThemeToggle";
+import Graph from "../components/Graph";
 
 import { deleteTasks, logoutUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -116,7 +117,8 @@ export default function Dashboard() {
             />
           </>
         )}
-
+        {/* Graph */}
+        <Graph/>
         {/* Floating Add Button */}
         <FloatingButton onClick={() => setIsModalOpen(true)} />
 
