@@ -81,6 +81,7 @@ const completeTasks = async (req, res) => {
     }
 
     task.complete = !task.complete;
+    task.completedAt = task.complete ? new Date() : null;
 
     await task.save();
 

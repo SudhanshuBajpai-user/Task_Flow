@@ -14,6 +14,8 @@ const taskSchema = new mongoose.Schema({
     default: false
   },
 
+  completedAt: Date||null,
+
   date: Date,
 
   userId:{type:String,required:true}
