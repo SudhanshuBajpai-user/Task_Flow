@@ -10,7 +10,9 @@ const MongoStore = require('connect-mongo').default;
 const app=express();
 
 
-app.use(express.urlencoded());
+app.use(express.urlencoded({
+  extended: true,
+}));
 app.use(express.json());
 connectDB();
 
@@ -30,7 +32,7 @@ app.use(session({
   cookie: {
     httpOnly: true,
     sameSite: 'lax',
-    secure: false,
+    secure: process.env.NODE_ENV === "production",
     maxAge: 1000 * 60 * 60 * 24  // 1 day
   }
 }));

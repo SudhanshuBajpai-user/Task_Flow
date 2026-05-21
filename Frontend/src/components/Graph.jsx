@@ -21,9 +21,7 @@ export default function Graph() {
     const dailyData = {};
 
     tasks.forEach((task) => {
-      const taskDate = new Date(task.date)
-        .toISOString()
-        .split("T")[0];
+      const taskDate = new Date(task.date).toISOString().split("T")[0];
 
       if (!dailyData[taskDate]) {
         dailyData[taskDate] = {
@@ -34,7 +32,11 @@ export default function Graph() {
 
       dailyData[taskDate].total++;
 
-      if (task.complete && task.completedAt) {
+      const completedDate = task.completedAt
+        ? new Date(task.completedAt).toISOString().split("T")[0]
+        : null;
+
+      if (task.complete && completedDate === taskDate) {
         dailyData[taskDate].completed++;
       }
     });
@@ -47,18 +49,13 @@ export default function Graph() {
       }))
       .sort((a, b) => new Date(a.date) - new Date(b.date));
 
-    return view === "7days"
-      ? formatted.slice(-7)
-      : formatted.slice(-30);
-
+    return view === "7days" ? formatted.slice(-7) : formatted.slice(-30);
   }, [tasks, view]);
 
   return (
     <div className="bg-[#111827] border border-white/10 rounded-3xl p-6 shadow-xl">
-      
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
-        
         <div>
           <h2 className="text-xl font-semibold text-white">
             Productivity Analytics
@@ -99,11 +96,7 @@ export default function Graph() {
       <div className="w-full h-[320px]">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
-            
-            <CartesianGrid
-              strokeDasharray="3 3"
-              stroke="#1f2937"
-            />
+            <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />
 
             <XAxis
               dataKey="date"
@@ -111,10 +104,7 @@ export default function Graph() {
               tick={{ fill: "#9ca3af", fontSize: 12 }}
             />
 
-            <YAxis
-              stroke="#9ca3af"
-              tick={{ fill: "#9ca3af", fontSize: 12 }}
-            />
+            <YAxis stroke="#9ca3af" tick={{ fill: "#9ca3af", fontSize: 12 }} />
 
             <Tooltip
               contentStyle={{
@@ -128,18 +118,10 @@ export default function Graph() {
             <Legend />
 
             {/* Total Tasks */}
-            <Bar
-              dataKey="total"
-              fill="#6366f1"
-              radius={[8, 8, 0, 0]}
-            />
+            <Bar dataKey="total" fill="#6366f1" radius={[8, 8, 0, 0]} />
 
             {/* Completed Tasks */}
-            <Bar
-              dataKey="completed"
-              fill="#22c55e"
-              radius={[8, 8, 0, 0]}
-            />
+            <Bar dataKey="completed" fill="#22c55e" radius={[8, 8, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
       </div>
