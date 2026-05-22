@@ -18,7 +18,7 @@ export default function Tasks() {
 
   const navigate = useNavigate();
   const { tasks, setTasks } = useTodo();
-
+  
   const {
     todayTasks,
     tomorrowTasks,
@@ -27,8 +27,7 @@ export default function Tasks() {
     dueTasks,
   } = useTaskDate(tasks);
 
-    const [isModalOpen, setIsModalOpen] = useState(false);
-
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 

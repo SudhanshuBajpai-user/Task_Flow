@@ -1,11 +1,14 @@
+import { useState } from "react";
 export default function TaskList({
   title,
   tasks = [],
   onDelete,
   onComplete,
   onEdit,
+  isOpen,
 }) {
   const pendingTasks = tasks.filter((task) => !task.complete);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   const priorityStyles = {
     low: "bg-green-500/20 text-green-400",
@@ -43,25 +46,54 @@ export default function TaskList({
               </div>
 
               {/* Right */}
-              <div className="flex items-center gap-3">
-                
-                {/* 🔥 Priority Badge */}
+              <div className="flex items-center gap-3 relative">
+                {/* Priority Badge */}
                 <span
                   className={`
-                    text-xs px-2 py-1 rounded-md capitalize
-                    ${priorityStyles[task.priority] || "bg-gray-500/20 text-gray-400"}
-                  `}
+      text-xs px-2 py-1 rounded-md capitalize
+      ${priorityStyles[task.priority] || "bg-gray-500/20 text-gray-400"}
+    `}
                 >
                   {task.priority}
                 </span>
 
-                {/* Delete */}
+                {/* Three dots button */}
                 <button
-                  onClick={() => onDelete(task._id)}
-                  className="opacity-0 group-hover:opacity-100 transition text-red-400 hover:text-red-500"
+                  onClick={(e) => {
+                    e.stopPropagation();
+
+                    setOpenMenuId(openMenuId === task._id ? null : task._id);
+                  }}
+                  className="opacity-0 group-hover:opacity-100 transition text-gray-400 hover:text-white px-1"
                 >
-                  ✖
+                  ⋮
                 </button>
+
+                {/* Dropdown */}
+                {openMenuId === task._id && (
+                  <div className="absolute right-0 top-8 w-40 bg-[#1e293b] border border-white/10 rounded-xl shadow-xl overflow-hidden z-50">
+                    <button
+                      onClick={() => onEdit(task._id)}
+                      className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10"
+                    >
+                      Edit
+                    </button>
+
+                    <button
+                      onClick={() => onComplete(task._id)}
+                      className="block w-full text-left px-4 py-2 text-sm text-white hover:bg-white/10"
+                    >
+                      Complete
+                    </button>
+
+                    <button
+                      onClick={() => onDelete(task._id)}
+                      className="block w-full text-left px-4 py-2 text-sm text-red-400 hover:bg-red-500/10"
+                    >
+                      Delete
+                    </button>
+                  </div>
+                )}
               </div>
             </div>
           ))}
