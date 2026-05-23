@@ -7,6 +7,7 @@ import EditTaskModal from "../components/tasks/EditTasksModel";
 import FloatingButton from "../components/layout/FloatingButton";
 import ThemeToggle from "../components/ThemeToggle";
 import Graph from "../components/Graph";
+import AddSubtask from "../components/AddSubtasks";
 
 import { deleteTasks, logoutUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -30,6 +31,10 @@ export default function Dashboard() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [isEditOpen, setIsEditOpen] = useState(false);
   const [selectedTaskId, setSelectedTaskId] = useState(null);
+
+  // Sub-Tasks Model
+  const [showSubtaskModal, setShowSubtaskModal] = useState(false);
+  const [selectedSubTaskId, setSelectedSubTaskId] = useState(null);
 
   // 🔐 Logout
   const handleLogout = async () => {
@@ -106,6 +111,10 @@ export default function Dashboard() {
               onDelete={handleDelete}
               onComplete={completeTask}
               onEdit={handleEdit}
+              addSubtask={(taskId) => {
+                setSelectedSubTaskId(taskId);
+                setShowSubtaskModal(true);
+              }}
             />
 
             <TaskList
@@ -114,11 +123,15 @@ export default function Dashboard() {
               onDelete={handleDelete}
               onComplete={completeTask}
               onEdit={handleEdit}
+              addSubtask={(taskId) => {
+                setSelectedSubTaskId(taskId);
+                setShowSubtaskModal(true);
+              }}
             />
           </>
         )}
         {/* Graph */}
-        <Graph/>
+        <Graph />
         {/* Floating Add Button */}
         <FloatingButton onClick={() => setIsModalOpen(true)} />
 
@@ -134,6 +147,16 @@ export default function Dashboard() {
           taskId={selectedTaskId}
           onClose={() => setIsEditOpen(false)}
         />
+        {showSubtaskModal && (
+          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+            <div className="w-full max-w-md">
+              <AddSubtask
+                taskId={selectedTaskId}
+                onClose={() => setShowSubtaskModal(false)}
+              />
+            </div>
+          </div>
+        )}
       </main>
     </div>
   );

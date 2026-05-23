@@ -129,4 +129,55 @@ const editTasks = async (req, res) => {
   }
 };
 
-module.exports = { postTasks, getTasks, deleteTasks, completeTasks, editTasks };
+const addSubTasks = async (req, res) => {
+  console.log("ADD SUBTASK HIT");
+
+  try {
+
+    const { taskId, title } = req.body;
+
+    if (!title?.trim()) {
+      return res.status(400).json({
+        message: "Subtask title required",
+      });
+    }
+
+    const updatedTask =
+      await Task.findOneAndUpdate(
+        {
+          _id: taskId,
+          userId: req.session.userId,
+        },
+
+        {
+          $push: {
+            subtasks: {
+              title,
+            },
+          },
+        },
+
+        {
+          returnDocument: "after",
+        },
+      );
+
+    if (!updatedTask) {
+      return res.status(404).json({
+        message: "Task not found",
+      });
+    }
+
+    res.status(200).json(updatedTask);
+
+  } catch (err) {
+
+    console.error(err);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+module.exports = { postTasks, getTasks, deleteTasks, completeTasks, editTasks, addSubTasks };

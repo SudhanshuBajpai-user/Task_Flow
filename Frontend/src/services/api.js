@@ -17,3 +17,4 @@ export const profile=()=>API.get("/user");
 export const editTask = (id, data) =>API.put(`/tasks/edit/${id}`, data);
 export const verificationLink=(email)=>API.post("/verify-email",{email});
 export const verifyEmailToken = (token) =>API.get(`/verify-email/${token}`);
+export const onAddSubtask=(taskId,title)=>API.put("/tasks/addSubTasks",{taskId,title});
