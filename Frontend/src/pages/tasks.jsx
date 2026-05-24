@@ -1,16 +1,16 @@
 import { useState } from "react";
 import { useTodo } from "../context/listContext";
 import { useTaskDate } from "../hooks/useTaskDate";
-import TaskList from "../components/tasks/TaskList";
-import EditTaskModal from "../components/tasks/EditTasksModel";
+import TaskList from "../tasks/TaskList";
+import EditTaskModal from "../tasks/EditTasksModel";
 import { useCompleteTask } from "../components/completed";
 import { useStartTask } from "../hooks/useStartTasks";
-import Sidebar from "../components/layout/Sidebar";
+import Sidebar from "../layout/Sidebar";
 import { useNavigate } from "react-router-dom";
 import { logoutUser, deleteTasks } from "../services/api";
-import CompletedTasks from "../components/tasks/CompletedTasks";
-import FloatingButton from "../components/layout/FloatingButton";
-import AddTaskModal from "../components/tasks/AddTaskModel";
+import CompletedTasks from "../tasks/CompletedTasks";
+import FloatingButton from "../layout/FloatingButton";
+import AddTaskModal from "../Models/AddTaskModel";
 
 
 export default function Tasks() {

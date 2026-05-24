@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import EditTask from "../Edittasks";
+import EditTask from "../components/Edittasks";
 
 export default function EditTaskModal({ isOpen, onClose, taskId }) {
   return (

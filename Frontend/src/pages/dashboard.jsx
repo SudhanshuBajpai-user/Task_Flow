@@ -1,13 +1,14 @@
-import Sidebar from "../components/layout/Sidebar";
-import Profile from "../components/layout/Profile";
-import StatsCard from "../components/tasks/StatsCard";
-import TaskList from "../components/tasks/TaskList";
-import AddTaskModal from "../components/tasks/AddTaskModel"; // ✅ fixed
-import EditTaskModal from "../components/tasks/EditTasksModel";
-import FloatingButton from "../components/layout/FloatingButton";
+import Sidebar from "../layout/Sidebar";
+import Profile from "../layout/Profile";
+import StatsCard from "../tasks/StatsCard";
+import TaskList from "../tasks/TaskList";
+import AddTaskModal from "../Models/AddTaskModel";
+import EditTaskModal from "../tasks/EditTasksModel";
+import FloatingButton from "../layout/FloatingButton";
 import ThemeToggle from "../components/ThemeToggle";
 import Graph from "../components/Graph";
-import AddSubtask from "../components/AddSubtasks";
+import AddSubtask from "../tasks/AddSubtasks";
+import TaskDetailsModal from "../Models/TaskDetailModel";
 
 import { deleteTasks, logoutUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
@@ -36,6 +37,9 @@ export default function Dashboard() {
   const [showSubtaskModal, setShowSubtaskModal] = useState(false);
   const [selectedSubTaskId, setSelectedSubTaskId] = useState(null);
 
+  //Task Details
+  const [showTaskDetails, setShowTaskDetails] = useState(false);
+  const [selectedTask, setSelectedTask] = useState(null);
   // 🔐 Logout
   const handleLogout = async () => {
     try {
@@ -115,6 +119,10 @@ export default function Dashboard() {
                 setSelectedSubTaskId(taskId);
                 setShowSubtaskModal(true);
               }}
+              openTask={(task) => {
+                setSelectedTask(task);
+                setShowTaskDetails(true);
+              }}
             />
 
             <TaskList
@@ -126,6 +134,10 @@ export default function Dashboard() {
               addSubtask={(taskId) => {
                 setSelectedSubTaskId(taskId);
                 setShowSubtaskModal(true);
+              }}
+              openTask={(task) => {
+                setSelectedTask(task);
+                setShowTaskDetails(true);
               }}
             />
           </>
@@ -151,11 +163,23 @@ export default function Dashboard() {
           <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
             <div className="w-full max-w-md">
               <AddSubtask
-                taskId={selectedTaskId}
+                taskId={selectedSubTaskId}
                 onClose={() => setShowSubtaskModal(false)}
               />
             </div>
           </div>
+        )}
+        {showTaskDetails && (
+          <TaskDetailsModal
+            task={selectedTask}
+            onClose={() => setShowTaskDetails(false)}
+            onEdit={handleEdit}
+            onDelete={handleDelete}
+            addSubtask={(taskId) => {
+              setSelectedSubTaskId(taskId);
+              setShowSubtaskModal(true);
+            }}
+          />
         )}
       </main>
     </div>

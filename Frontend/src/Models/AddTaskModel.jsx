@@ -1,5 +1,5 @@
 import { motion, AnimatePresence } from "framer-motion";
-import AddItem from "../AddItem";
+import AddItem from "../tasks/AddItem";
 
 export default function AddTaskModal({ isOpen, onClose }) {
   return (

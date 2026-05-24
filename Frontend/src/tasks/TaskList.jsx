@@ -7,41 +7,30 @@ export default function TaskList({
   onComplete,
   onEdit,
   addSubtask,
+  openTask,
 }) {
-  const pendingTasks = tasks.filter(
-    (task) => !task.complete,
-  );
+  const pendingTasks = tasks.filter((task) => !task.complete);
 
-  const [openMenuId, setOpenMenuId] =
-    useState(null);
+  const [openMenuId, setOpenMenuId] = useState(null);
 
   const priorityStyles = {
     low: "bg-green-500/20 text-green-400",
-    medium:
-      "bg-yellow-500/20 text-yellow-400",
+    medium: "bg-yellow-500/20 text-yellow-400",
     high: "bg-red-500/20 text-red-400",
   };
 
   return (
     <div className="bg-[#0f172a] rounded-2xl shadow-md p-5 border border-gray-800">
-      
-      <h3 className="mb-4 text-lg font-semibold text-white">
-        {title}
-      </h3>
+      <h3 className="mb-4 text-lg font-semibold text-white">{title}</h3>
 
       {pendingTasks.length === 0 ? (
-        <p className="text-gray-500 text-sm">
-          No tasks available
-        </p>
+        <p className="text-gray-500 text-sm">No tasks available</p>
       ) : (
         <div className="space-y-3">
-          
           {pendingTasks.map((task) => (
             <div
               key={task._id}
-              onDoubleClick={() =>
-                onEdit(task._id)
-              }
+              onClick={() => openTask(task)}
               className={`
                 flex justify-between items-center
                 p-4 rounded-2xl
@@ -59,13 +48,12 @@ export default function TaskList({
 
                       shadow-[0_0_25px_rgba(239,68,68,0.15)]
                     `
-                    : task.priority ===
-                      "medium"
-                    ? `
+                    : task.priority === "medium"
+                      ? `
                       border-yellow-500/40
                       bg-yellow-500/[0.03]
                     `
-                    : `
+                      : `
                       border-green-500/30
                       bg-green-500/[0.02]
                     `
@@ -76,19 +64,12 @@ export default function TaskList({
             >
               {/* Left Side */}
               <div className="flex items-center gap-3">
-                
                 {/* Rounded Checkbox */}
                 <input
                   type="checkbox"
-                  checked={
-                    task.complete || false
-                  }
-                  onChange={() =>
-                    onComplete(task._id)
-                  }
-                  onClick={(e) =>
-                    e.stopPropagation()
-                  }
+                  checked={task.complete || false}
+                  onChange={() => onComplete(task._id)}
+                  onClick={(e) => e.stopPropagation()}
                   className="
                     w-5 h-5
                     rounded-full
@@ -102,16 +83,12 @@ export default function TaskList({
 
                 {/* Task Content */}
                 <div>
-                  
                   <p
                     className={`
                       text-sm font-medium
 
                       ${
-                        task.priority ===
-                        "high"
-                          ? "text-red-100"
-                          : "text-white"
+                        task.priority === "high" ? "text-red-100" : "text-white"
                       }
                     `}
                     title="Double click to edit"
@@ -122,12 +99,10 @@ export default function TaskList({
                   {/* Tags */}
                   {task.tags?.length > 0 && (
                     <div className="flex flex-wrap gap-2 mt-2">
-                      
-                      {task.tags.map(
-                        (tag, index) => (
-                          <span
-                            key={index}
-                            className="
+                      {task.tags.map((tag, index) => (
+                        <span
+                          key={index}
+                          className="
                               text-[10px]
                               px-2 py-1
                               rounded-full
@@ -135,11 +110,10 @@ export default function TaskList({
                               text-purple-300
                               border border-purple-500/20
                             "
-                          >
-                            #{tag}
-                          </span>
-                        ),
-                      )}
+                        >
+                          #{tag}
+                        </span>
+                      ))}
                     </div>
                   )}
                 </div>
@@ -147,15 +121,12 @@ export default function TaskList({
 
               {/* Right Side */}
               <div className="flex items-center gap-3 relative">
-                
                 {/* Priority Badge */}
                 <span
                   className={`
                     text-xs px-2 py-1 rounded-md capitalize
                     ${
-                      priorityStyles[
-                        task.priority
-                      ] ||
+                      priorityStyles[task.priority] ||
                       "bg-gray-500/20 text-gray-400"
                     }
                   `}
@@ -168,12 +139,7 @@ export default function TaskList({
                   onClick={(e) => {
                     e.stopPropagation();
 
-                    setOpenMenuId(
-                      openMenuId ===
-                        task._id
-                        ? null
-                        : task._id,
-                    );
+                    setOpenMenuId(openMenuId === task._id ? null : task._id);
                   }}
                   className="
                     opacity-0
@@ -189,8 +155,7 @@ export default function TaskList({
                 </button>
 
                 {/* Dropdown Menu */}
-                {openMenuId ===
-                  task._id && (
+                {openMenuId === task._id && (
                   <div
                     className="
                       absolute
@@ -206,9 +171,7 @@ export default function TaskList({
                     "
                   >
                     <button
-                      onClick={() =>
-                        onEdit(task._id)
-                      }
+                      onClick={() => onEdit(task._id)}
                       className="
                         block w-full text-left
                         px-4 py-3 text-sm
@@ -221,9 +184,7 @@ export default function TaskList({
                     </button>
 
                     <button
-                      onClick={() =>
-                        addSubtask(task._id)
-                      }
+                      onClick={() => addSubtask(task._id)}
                       className="
                         block w-full text-left
                         px-4 py-3 text-sm
@@ -236,9 +197,7 @@ export default function TaskList({
                     </button>
 
                     <button
-                      onClick={() =>
-                        onDelete(task._id)
-                      }
+                      onClick={() => onDelete(task._id)}
                       className="
                         block w-full text-left
                         px-4 py-3 text-sm

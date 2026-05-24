@@ -146,7 +146,6 @@ const addSubTasks = async (req, res) => {
       await Task.findOneAndUpdate(
         {
           _id: taskId,
-          userId: req.session.userId,
         },
 
         {
