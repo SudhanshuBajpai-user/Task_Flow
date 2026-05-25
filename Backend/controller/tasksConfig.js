@@ -133,7 +133,6 @@ const addSubTasks = async (req, res) => {
   console.log("ADD SUBTASK HIT");
 
   try {
-
     const { taskId, title } = req.body;
 
     if (!title?.trim()) {
@@ -142,24 +141,23 @@ const addSubTasks = async (req, res) => {
       });
     }
 
-    const updatedTask =
-      await Task.findOneAndUpdate(
-        {
-          _id: taskId,
-        },
+    const updatedTask = await Task.findOneAndUpdate(
+      {
+        _id: taskId,
+      },
 
-        {
-          $push: {
-            subtasks: {
-              title,
-            },
+      {
+        $push: {
+          subtasks: {
+            title,
           },
         },
+      },
 
-        {
-          returnDocument: "after",
-        },
-      );
+      {
+        returnDocument: "after",
+      },
+    );
 
     if (!updatedTask) {
       return res.status(404).json({
@@ -168,9 +166,7 @@ const addSubTasks = async (req, res) => {
     }
 
     res.status(200).json(updatedTask);
-
   } catch (err) {
-
     console.error(err);
 
     res.status(500).json({
@@ -179,4 +175,47 @@ const addSubTasks = async (req, res) => {
   }
 };
 
-module.exports = { postTasks, getTasks, deleteTasks, completeTasks, editTasks, addSubTasks };
+const completeSubtasks = async (req, res) => {
+  try {
+    const { taskId, subTaskId } = req.body;
+
+    const task = await Task.findById(taskId);
+
+    if (!task) {
+      return res.status(404).json({
+        message: "Task not found",
+      });
+    }
+
+    const subtask = task.subtasks.find(
+      (sub) => sub._id.toString() === subTaskId,
+    );
+
+    if (!subtask) {
+      return res.status(404).json({
+        message: "Subtask not found",
+      });
+    }
+
+    subtask.complete = !subtask.complete;
+
+    await task.save();
+
+    res.status(200).json(task);
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+module.exports = {
+  postTasks,
+  getTasks,
+  deleteTasks,
+  completeTasks,
+  editTasks,
+  addSubTasks,
+  completeSubtasks,
+};

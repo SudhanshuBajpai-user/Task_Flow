@@ -1,10 +1,9 @@
 import { useState } from "react";
 import { onAddSubtask } from "../services/api";
+import { useContext } from "react";
+import { useTodo } from "../context/listContext";
 
-export default function AddSubtask({
-  taskId,
-  onClose,
-}) {
+export default function AddSubtask({ taskId, onClose, setTasks }) {
   const [form, setForm] = useState({
     title: "",
   });
@@ -17,21 +16,24 @@ export default function AddSubtask({
   };
 
   const handleSubmit = async (e) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  if (!form.title.trim()) return;
+    if (!form.title.trim()) return;
 
-  await onAddSubtask(
-    taskId,
-    form.title,
-  );
+    const response = await onAddSubtask(taskId, form.title);
 
-  setForm({
-    title: "",
-  });
+    setTasks((prev) =>
+      prev.map((task) =>
+        task._id === response.data._id ? response.data : task,
+      ),
+    );
 
-  onClose();
-};
+    setForm({
+      title: "",
+    });
+
+    onClose();
+  };
 
   return (
     <div className="bg-[#0f172a] p-5 rounded-2xl border border-white/10 shadow-xl w-full">

@@ -11,58 +11,79 @@ import AddSubtask from "../tasks/AddSubtasks";
 import TaskDetailsModal from "../Models/TaskDetailModel";
 
 import { deleteTasks, logoutUser } from "../services/api";
+
 import { useNavigate } from "react-router-dom";
 
 import { useCompleteTask } from "../components/completed";
 import { useStartTask } from "../hooks/useStartTasks";
 import { useTaskDate } from "../hooks/useTaskDate";
 import { useTodo } from "../context/listContext";
+
 import { useState } from "react";
 
 export default function Dashboard() {
-  useStartTask(); // fetch tasks once
+  useStartTask();
 
   const { tasks, setTasks, loading } = useTodo();
+
   const navigate = useNavigate();
 
   const { todayTasks, tomorrowTasks, completed } = useTaskDate(tasks);
+
   const { completeTask } = useCompleteTask();
 
-  // 🔹 Modal states
+  /* ---------------- MODALS ---------------- */
+
   const [isModalOpen, setIsModalOpen] = useState(false);
+
   const [isEditOpen, setIsEditOpen] = useState(false);
+
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
-  // Sub-Tasks Model
+  /* ---------- SUBTASK MODAL ---------- */
+
   const [showSubtaskModal, setShowSubtaskModal] = useState(false);
+
   const [selectedSubTaskId, setSelectedSubTaskId] = useState(null);
 
-  //Task Details
+  /* ---------- TASK DETAILS ---------- */
+
   const [showTaskDetails, setShowTaskDetails] = useState(false);
-  const [selectedTask, setSelectedTask] = useState(null);
-  // 🔐 Logout
+
+  /* ---------------- IMPORTANT ---------------- */
+
+  // derive fresh task every rerender
+  const selectedTask = tasks.find((task) => task._id === selectedTaskId);
+
+  /* ---------------- LOGOUT ---------------- */
+
   const handleLogout = async () => {
     try {
       await logoutUser();
+
       navigate("/login");
     } catch (error) {
       console.error(error);
     }
   };
 
-  // 🗑 Delete
+  /* ---------------- DELETE ---------------- */
+
   const handleDelete = async (id) => {
     try {
       await deleteTasks(id);
+
       setTasks((prev) => prev.filter((task) => task._id !== id));
     } catch (error) {
       console.error(error);
     }
   };
 
-  // ✏️ Open Edit Modal
+  /* ---------------- EDIT ---------------- */
+
   const handleEdit = (id) => {
     setSelectedTaskId(id);
+
     setIsEditOpen(true);
   };
 
@@ -90,25 +111,42 @@ export default function Dashboard() {
         {/* Loading */}
         {loading ? (
           <div className="flex justify-center items-center h-64">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-purple-500"></div>
+            <div
+              className="
+                animate-spin
+                rounded-full
+                h-12 w-12
+                border-b-2
+                border-purple-500
+              "
+            />
           </div>
         ) : (
           <>
             {/* Stats */}
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div
+              className="
+              grid
+              grid-cols-1
+              md:grid-cols-3
+              gap-4
+            "
+            >
               <StatsCard title="Total" value={tasks.length} />
+
               <StatsCard
                 title="Completed"
                 value={completed.length}
                 color="text-green-400"
               />
+
               <StatsCard
                 title="Pending"
                 value={tasks.length - completed.length}
               />
             </div>
 
-            {/* Task Lists */}
+            {/* Today Tasks */}
             <TaskList
               title="Today"
               tasks={todayTasks}
@@ -117,14 +155,17 @@ export default function Dashboard() {
               onEdit={handleEdit}
               addSubtask={(taskId) => {
                 setSelectedSubTaskId(taskId);
+
                 setShowSubtaskModal(true);
               }}
               openTask={(task) => {
-                setSelectedTask(task);
+                setSelectedTaskId(task._id);
+
                 setShowTaskDetails(true);
               }}
             />
 
+            {/* Tomorrow Tasks */}
             <TaskList
               title="Tomorrow"
               tasks={tomorrowTasks}
@@ -133,17 +174,21 @@ export default function Dashboard() {
               onEdit={handleEdit}
               addSubtask={(taskId) => {
                 setSelectedSubTaskId(taskId);
+
                 setShowSubtaskModal(true);
               }}
               openTask={(task) => {
-                setSelectedTask(task);
+                setSelectedTaskId(task._id);
+
                 setShowTaskDetails(true);
               }}
             />
           </>
         )}
+
         {/* Graph */}
         <Graph />
+
         {/* Floating Add Button */}
         <FloatingButton onClick={() => setIsModalOpen(true)} />
 
@@ -153,14 +198,24 @@ export default function Dashboard() {
           onClose={() => setIsModalOpen(false)}
         />
 
-        {/* Edit Task Modal */}
+        {/* Edit Modal */}
         <EditTaskModal
           isOpen={isEditOpen}
           taskId={selectedTaskId}
           onClose={() => setIsEditOpen(false)}
         />
+
+        {/* Add Subtask Modal */}
         {showSubtaskModal && (
-          <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
+          <div
+            className="
+              fixed inset-0
+              bg-black/50
+              flex items-center
+              justify-center
+              z-50
+            "
+          >
             <div className="w-full max-w-md">
               <AddSubtask
                 taskId={selectedSubTaskId}
@@ -169,6 +224,8 @@ export default function Dashboard() {
             </div>
           </div>
         )}
+
+        {/* Task Details Modal */}
         {showTaskDetails && (
           <TaskDetailsModal
             task={selectedTask}
@@ -177,6 +234,7 @@ export default function Dashboard() {
             onDelete={handleDelete}
             addSubtask={(taskId) => {
               setSelectedSubTaskId(taskId);
+
               setShowSubtaskModal(true);
             }}
           />
