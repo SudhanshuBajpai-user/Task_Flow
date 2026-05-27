@@ -5,7 +5,6 @@ import TaskList from "../tasks/TaskList";
 import AddTaskModal from "../Models/AddTaskModel";
 import EditTaskModal from "../tasks/EditTasksModel";
 import FloatingButton from "../layout/FloatingButton";
-import ThemeToggle from "../components/ThemeToggle";
 import Graph from "../components/Graph";
 import AddSubtask from "../tasks/AddSubtasks";
 import TaskDetailsModal from "../Models/TaskDetailModel";
@@ -35,15 +34,12 @@ export default function Dashboard() {
   /* ---------------- MODALS ---------------- */
 
   const [isModalOpen, setIsModalOpen] = useState(false);
-
   const [isEditOpen, setIsEditOpen] = useState(false);
-
   const [selectedTaskId, setSelectedTaskId] = useState(null);
 
   /* ---------- SUBTASK MODAL ---------- */
 
   const [showSubtaskModal, setShowSubtaskModal] = useState(false);
-
   const [selectedSubTaskId, setSelectedSubTaskId] = useState(null);
 
   /* ---------- TASK DETAILS ---------- */
@@ -103,7 +99,6 @@ export default function Dashboard() {
           <h1 className="text-2xl font-semibold">Dashboard</h1>
 
           <div className="flex items-center gap-2">
-            <ThemeToggle />
             <Profile />
           </div>
         </div>
@@ -160,7 +155,6 @@ export default function Dashboard() {
               }}
               openTask={(task) => {
                 setSelectedTaskId(task._id);
-
                 setShowTaskDetails(true);
               }}
             />
@@ -179,7 +173,6 @@ export default function Dashboard() {
               }}
               openTask={(task) => {
                 setSelectedTaskId(task._id);
-
                 setShowTaskDetails(true);
               }}
             />

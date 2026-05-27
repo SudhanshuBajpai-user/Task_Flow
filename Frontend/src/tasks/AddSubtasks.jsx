@@ -3,10 +3,11 @@ import { onAddSubtask } from "../services/api";
 import { useContext } from "react";
 import { useTodo } from "../context/listContext";
 
-export default function AddSubtask({ taskId, onClose, setTasks }) {
+export default function AddSubtask({ taskId, onClose }) {
   const [form, setForm] = useState({
     title: "",
   });
+  const { setTasks } = useTodo();
   const [loading, setLoading] = useState(false);
   const handleChange = (e) => {
     setForm({
@@ -37,7 +38,24 @@ export default function AddSubtask({ taskId, onClose, setTasks }) {
 
   return (
     <div className="bg-[#0f172a] p-5 rounded-2xl border border-white/10 shadow-xl w-full">
-      <h2 className="text-white text-lg font-semibold mb-4">Add Subtask</h2>
+      <div className="flex items-center justify-between mb-4">
+        <h2 className="text-white text-lg font-semibold">Add Subtask</h2>
+
+        <button
+          type="button"
+          onClick={onClose}
+          className="
+      text-gray-400
+      hover:text-white
+
+      text-xl
+
+      transition
+    "
+        >
+          ✕
+        </button>
+      </div>
 
       <form onSubmit={handleSubmit} className="space-y-4">
         {/* Subtask Input */}

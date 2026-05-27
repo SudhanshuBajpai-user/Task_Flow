@@ -93,7 +93,7 @@ export default function Graph() {
       </div>
 
       {/* Chart */}
-      <div className="w-full h-[320px]">
+      <div className="w-full h-[320px] overflow-hidden">
         <ResponsiveContainer width="100%" height="100%">
           <BarChart data={chartData}>
             <CartesianGrid strokeDasharray="3 3" stroke="#1f2937" />

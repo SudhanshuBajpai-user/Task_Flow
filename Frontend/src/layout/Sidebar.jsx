@@ -1,6 +1,6 @@
 export default function Sidebar({ onLogout, navigate }) {
   return (
-    <aside className="w-64 h-screen bg-[#0b1220] border-r border-white/10 flex flex-col">
+    <aside className="w-64  min-w-64 h-screen sticky  top-0 bg-[#0b1220] border-r border-white/10 flex flex-col flex-shrink-0">
       
       {/* Logo */}
       <div className="p-6 text-xl font-semibold tracking-tight">

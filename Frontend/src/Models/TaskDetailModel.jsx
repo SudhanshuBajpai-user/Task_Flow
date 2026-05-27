@@ -59,6 +59,7 @@ export default function TaskDetailsModal({
                 text-2xl
                 font-semibold
                 text-white
+                break-all
               "
             >
               {task.title}

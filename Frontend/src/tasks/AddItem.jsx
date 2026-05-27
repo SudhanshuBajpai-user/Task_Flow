@@ -1,18 +1,28 @@
 import { useTodo } from "../context/listContext";
-import { useStartTask } from "../hooks/useStartTasks";
 import { addUserTask } from "../services/api";
+
 import { useState } from "react";
+
 import toast from "react-hot-toast";
 
 function AddItem() {
-const { tasks, setTasks } = useTodo();
+  const { setTasks } = useTodo();
+
   const [loading, setLoading] = useState(false);
+
   const [form, setForm] = useState({
     title: "",
     priority: "Low",
     complete: false,
     date: "",
+    tag: "",
   });
+
+  /* ---------------- TODAY DATE ---------------- */
+
+  const todayDate = new Date().toISOString().split("T")[0];
+
+  /* ---------------- HANDLE CHANGE ---------------- */
 
   const handleChange = (e) => {
     setForm({
@@ -20,6 +30,8 @@ const { tasks, setTasks } = useTodo();
       [e.target.name]: e.target.value,
     });
   };
+
+  /* ---------------- SUBMIT ---------------- */
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -34,20 +46,25 @@ const { tasks, setTasks } = useTodo();
         priority: form.priority.toLowerCase(),
         complete: form.complete,
         date: form.date,
+        tags: form.tag ? [form.tag] : [],
       });
 
       if (response.status === 201) {
         setTasks((prev) => [...prev, response.data]);
+
         toast.success("Task added successfully!");
+
         setForm({
           title: "",
           priority: "Low",
           complete: false,
           date: "",
+          tag: "",
         });
       }
     } catch (err) {
       console.log("ERROR:", err);
+
       toast.error("Failed to add task");
     } finally {
       setLoading(false);
@@ -55,46 +72,200 @@ const { tasks, setTasks } = useTodo();
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      {/* Task Input */}
-      <input
-        type="text"
-        name="title"
-        value={form.title}
-        onChange={handleChange}
-        placeholder="Write your task..."
-        className="w-full bg-[#020617] border border-gray-700 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
-      />
-
-      {/* Row: Priority + Date */}
-      <div className="flex gap-3">
-        {/* Priority */}
-        <select
-          name="priority"
-          value={form.priority}
-          onChange={handleChange}
-          className="flex-1 bg-[#020617] border border-gray-700 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-purple-500"
+    <form
+      onSubmit={handleSubmit}
+      className="
+        space-y-5
+      "
+    >
+      {/* Title */}
+      <div>
+        <label
+          className="
+            text-sm
+            text-gray-400
+            mb-2
+            block
+          "
         >
-          <option value="Low">🟢 Low</option>
-          <option value="Medium">🟡 Medium</option>
-          <option value="High">🔴 High</option>
-        </select>
+          Task Title
+        </label>
 
-        {/* Date */}
         <input
-          type="date"
-          name="date"
-          value={form.date}
+          type="text"
+          name="title"
+          value={form.title}
           onChange={handleChange}
-          className="flex-1 bg-[#020617] border border-gray-700 rounded-lg px-3 py-2 text-sm text-gray-300 focus:outline-none focus:ring-2 focus:ring-purple-500"
+          placeholder="Write your task..."
+          className="
+            w-full
+            bg-[#020617]
+            border border-gray-700
+            rounded-2xl
+            px-4 py-3
+            text-sm text-white
+            placeholder:text-gray-500
+            focus:outline-none
+            focus:ring-2
+            focus:ring-purple-500
+            transition
+          "
         />
       </div>
 
-      {/* Button */}
+      {/* Priority + Date */}
+      <div
+        className="
+          grid
+          grid-cols-1
+          md:grid-cols-2
+          gap-4
+        "
+      >
+        {/* Priority */}
+        <div>
+          <label
+            className="
+              text-sm
+              text-gray-400
+              mb-2
+              block
+            "
+          >
+            Priority
+          </label>
+
+          <select
+            name="priority"
+            value={form.priority}
+            onChange={handleChange}
+            className="
+              w-full
+              bg-[#020617]
+              border border-gray-700
+              rounded-2xl
+              px-4 py-3
+              text-sm text-white
+              focus:outline-none
+              focus:ring-2
+              focus:ring-purple-500
+              transition
+            "
+          >
+            <option value="Low">🟢 Low</option>
+
+            <option value="Medium">🟡 Medium</option>
+
+            <option value="High">🔴 High</option>
+          </select>
+        </div>
+
+        {/* Date */}
+        <div>
+          <label
+            className="
+              text-sm
+              text-gray-400
+              mb-2
+              block
+            "
+          >
+            Due Date
+          </label>
+
+          <input
+            type="date"
+            name="date"
+            value={form.date}
+            min={todayDate}
+            required
+            onChange={handleChange}
+            className="
+              w-full
+              bg-[#020617]
+              border border-gray-700
+              rounded-2xl
+              px-4 py-3
+              text-sm text-gray-300
+              cursor-pointer
+              focus:outline-none
+              focus:ring-2
+              focus:ring-purple-500
+              transition
+              color-scheme-dark
+              [&::-webkit-calendar-picker-indicator]:invert
+              [&::-webkit-calendar-picker-indicator]:opacity-70
+              hover:[&::-webkit-calendar-picker-indicator]:opacity-100
+            "
+          />
+        </div>
+      </div>
+
+      {/* Tag */}
+      <div>
+        <label
+          className="
+            text-sm
+            text-gray-400
+            mb-2
+            block
+          "
+        >
+          Tag
+        </label>
+
+        <input
+          type="text"
+          name="tag"
+          value={form.tag}
+          onChange={handleChange}
+          placeholder="Example: Work"
+          className="
+            w-full
+            bg-[#020617]
+            border border-gray-700
+            rounded-2xl
+            px-4 py-3
+            text-sm text-white
+            placeholder:text-gray-500
+            focus:outline-none
+            focus:ring-2
+            focus:ring-purple-500
+            transition
+          "
+        />
+
+        <p
+          className="
+            text-xs
+            text-gray-500
+            mt-2
+          "
+        >
+          Only one tag allowed
+        </p>
+      </div>
+
+      {/* Submit */}
       <button
         type="submit"
         disabled={loading}
-        className="bg-gradient-to-r from-purple-500 to-pink-500 text-white py-2 rounded-xl disabled:opacity-50"
+        className="
+          w-full
+          bg-gradient-to-r
+          from-purple-500
+          to-pink-500
+          text-white
+          py-3
+          rounded-2xl
+          font-medium
+          hover:opacity-90
+          transition-all
+          disabled:opacity-50
+          disabled:cursor-not-allowed
+          shadow-lg
+          shadow-purple-500/20
+        "
       >
         {loading ? "Adding..." : "+ Add Task"}
       </button>
