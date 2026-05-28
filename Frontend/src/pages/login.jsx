@@ -79,9 +79,9 @@ function Login() {
           disabled={loading}
         />
 
-        <p className="text-sm text-center">
+        <p className="text-sm text-white text-center">
           Don't have an account?{" "}
-          <Link to="/signup" className="text-blue-600 font-semibold">
+          <Link to="/signup" className="text-purple-400 hover:text-purple-300 transition font-semibold">
             Signup
           </Link>
         </p>

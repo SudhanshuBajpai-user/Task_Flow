@@ -59,9 +59,9 @@ function Signup() {
 
         <Button text={loading ? "Creating account..." : "Signup"} type="submit" disabled={loading} />
 
-        <p className="text-sm text-center">
+        <p className="text-sm text-white text-center">
           Already have an account?{" "}
-          <Link to="/login" className="text-blue-600 font-semibold">
+          <Link to="/login" className="text-purple-400 hover:text-purple-300 transition font-semibold">
             Login
           </Link>
         </p>

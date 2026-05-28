@@ -1,31 +1,18 @@
 @import "tailwindcss";
 
-/* Light theme variables */
-:root {
-  --bg-primary: #ffffff;
-  --bg-secondary: #f8fafc;
-  --bg-card: #ffffff;
-  --text-primary: #1e293b;
-  --text-secondary: #64748b;
-  --border: #e2e8f0;
-  --accent: #8b5cf6;
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+
+  min-height: 100%;
+
+  background-color: #020617;
+
+  overscroll-behavior: none;
 }
 
-/* Dark theme variables */
-[data-theme="dark"] {
-  --bg-primary: #0f172a;
-  --bg-secondary: #1e293b;
-  --bg-card: #1e293b;
-  --text-primary: #f8fafc;
-  --text-secondary: #cbd5e1;
-  --border: #334155;
-  --accent: #a78bfa;
+body {
+  -webkit-overflow-scrolling: touch;
 }
-
-/* Ensure Tailwind works with CSS variables */
-.bg-primary { background-color: var(--bg-primary); }
-.bg-secondary { background-color: var(--bg-secondary); }
-.bg-card { background-color: var(--bg-card); }
-.text-primary { color: var(--text-primary); }
-.text-secondary { color: var(--text-secondary); }
-.border-theme { border-color: var(--border); }
