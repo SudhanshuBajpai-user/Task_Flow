@@ -73,7 +73,6 @@ const login = async (req, res) => {
         },
       });
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -81,7 +80,6 @@ const login = async (req, res) => {
     });
   }
 };
-
 
 const cookie = async (req, res) => {
   try {
@@ -113,7 +111,6 @@ const cookie = async (req, res) => {
         email: user.email,
       },
     });
-
   } catch (err) {
     console.error(err);
     res.status(500).json({
@@ -139,34 +136,65 @@ const logout = (req, res) => {
 
 const userDetails = async (req, res) => {
   try {
-    // 🔐 Check session
     if (!req.session.userId) {
       return res.status(401).json({
         message: "Unauthorized",
       });
     }
 
-    // 🔍 Find user
-    const user = await User.findById(req.session.userId);
+    const user = await User.findById(req.session.userId).select("-password");
 
     if (!user) {
       return res.status(404).json({
         message: "User not found",
       });
     }
-
-    res.status(200).json({
-      name: user.name,
-      email: user.email,
-      avatar: user.avatar || null,
-    });
+    res.status(200).json(user);
   } catch (err) {
     console.error("USER DETAILS ERROR:", err);
 
     res.status(500).json({
-      message: "Server error",
+      message: "Server Error",
     });
   }
 };
 
-module.exports = { signup, login, cookie, logout, userDetails };
+const updateProfile = async (req, res) => {
+  try {
+    if (!req.session.userId) {
+      return res.status(401).json({
+        message: "Unauthorized",
+      });
+    }
+
+    const { name, email, bio, phone, location, occupation, profilePhoto } =
+      req.body;
+
+    const updatedUser = await User.findByIdAndUpdate(
+      req.session.userId,
+      {
+        name,
+        email,
+        bio,
+        phone,
+        location,
+        occupation,
+        profilePhoto,
+      },
+      {
+        new: true,
+        runValidators: true,
+      },
+    ).select("-password");
+
+    res.status(200).json(updatedUser);
+  } catch (err) {
+    console.error(err);
+
+    res.status(500).json({
+      message: "Server Error",
+    });
+  }
+};
+
+module.exports = { signup, login, cookie, logout, userDetails, updateProfile };

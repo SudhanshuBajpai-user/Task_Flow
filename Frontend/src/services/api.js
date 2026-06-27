@@ -19,3 +19,4 @@ export const verificationLink=(email)=>API.post("/verify-email",{email});
 export const verifyEmailToken = (token) =>API.get(`/verify-email/${token}`);
 export const onAddSubtask=(taskId,title)=>API.put("/tasks/addSubTasks",{taskId,title});
 export const subTaskComplete=(taskId,subTaskId)=>API.put("/tasks/completeSubTasks",{taskId,subTaskId});
+export const updateUser = (data) =>API.put("/updateUser", data);

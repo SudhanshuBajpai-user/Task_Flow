@@ -14,14 +14,13 @@ import { deleteTasks, logoutUser } from "../services/api";
 import { useNavigate } from "react-router-dom";
 
 import { useCompleteTask } from "../components/completed";
-import { useStartTask } from "../hooks/useStartTasks";
 import { useTaskDate } from "../hooks/useTaskDate";
 import { useTodo } from "../context/listContext";
+import { useProfile } from "../context/userContext";
 
 import { useState } from "react";
 
 export default function Dashboard() {
-  useStartTask();
 
   const { tasks, setTasks, loading } = useTodo();
 

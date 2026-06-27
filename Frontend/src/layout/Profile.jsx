@@ -1,38 +1,83 @@
-import { useEffect, useState } from "react";
-import { profile } from "../services/api";
+import { useProfile } from "../context/userContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Profile() {
-  const [user, setUser] = useState(null);
+  const { user } = useProfile();
 
-  useEffect(() => {
-    const fetchProfile = async () => {
-      try {
-        const res = await profile();
-        setUser(res.data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchProfile();
-  }, []);
-
-  if (!user) {
-    return <div className="text-gray-400">Loading...</div>;
-  }
+  const navigate = useNavigate();
 
   return (
-    <div className="flex items-center gap-3">
-      {/* Avatar */}
-      <div className="w-10 h-10 rounded-full bg-purple-500 flex items-center justify-center text-white font-bold">
-        {user.name?.charAt(0).toUpperCase()}
-      </div>
+    <button
+      onClick={() => navigate("/profile")}
+      className="
+        flex
+        items-center
+        gap-3
 
-      {/* Name + Email */}
-      <div className="flex flex-col">
-        <span className="text-sm font-semibold">{user.name}</span>
-        <span className="text-xs text-gray-400">{user.email}</span>
+        bg-[#0f172a]
+
+        border
+        border-white/10
+
+        rounded-2xl
+
+        px-4
+        py-2
+
+        hover:bg-[#172033]
+        hover:border-purple-500/40
+
+        transition-all
+        duration-200
+      "
+    >
+      {/* Profile Photo */}
+      <img
+        src={
+          user?.profilePhoto ||
+          `https://ui-avatars.com/api/?background=7c3aed&color=fff&name=${encodeURIComponent(
+            user?.name || "User"
+          )}`
+        }
+        alt="Profile"
+        className="
+          w-12
+          h-12
+
+          rounded-full
+
+          object-cover
+
+          border-2
+          border-purple-500
+        "
+      />
+
+      {/* User Details */}
+      <div className="text-left">
+
+        <h2
+          className="
+            text-white
+            font-semibold
+            text-base
+            leading-none
+          "
+        >
+          {user?.name || "Loading..."}
+        </h2>
+
+        <p
+          className="
+            text-xs
+            text-gray-400
+            mt-1
+          "
+        >
+          {user?.email || "No Email"}
+        </p>
+
       </div>
-    </div>
+    </button>
   );
 }

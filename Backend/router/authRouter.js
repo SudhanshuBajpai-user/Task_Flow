@@ -12,6 +12,7 @@ authRouter.delete("/logout",authWay.logout);
 authRouter.get("/user",authWay.userDetails);
 authRouter.post("/verify-email",mailWay.sendVerification);
 authRouter.get("/verify-email/:token",mailWay.verificationLink);
+authRouter.put("/updateUser",authWay.updateProfile)
 
 
 module.exports=authRouter;
