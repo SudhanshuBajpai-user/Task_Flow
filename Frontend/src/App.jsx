@@ -14,22 +14,12 @@ import { ThemeProvider } from "./context/ThemeContext";
 import { TodoProvider } from "./context/listContext";
 import { ProfileProvider } from "./context/userContext";
 
-import { useStartTask } from "./hooks/useStartTasks";
-import { useStartProfile } from "./hooks/useUserProfile";
-
-function AppInitializer() {
-  useStartTask();
-  useStartProfile();
-
-  return null;
-}
 
 function App() {
   return (
     <ThemeProvider>
       <TodoProvider>
         <ProfileProvider>
-          <AppInitializer />
 
           <Routes>
             <Route path="/signup" element={<Signup />} />

@@ -8,6 +8,8 @@ import FloatingButton from "../layout/FloatingButton";
 import Graph from "../components/Graph";
 import AddSubtask from "../tasks/AddSubtasks";
 import TaskDetailsModal from "../Models/TaskDetailModel";
+import { useStartTask } from "../hooks/useStartTasks";
+import { useStartProfile } from "../hooks/useUserProfile";
 
 import { deleteTasks, logoutUser } from "../services/api";
 
@@ -21,6 +23,10 @@ import { useProfile } from "../context/userContext";
 import { useState } from "react";
 
 export default function Dashboard() {
+
+  useStartTask();
+  useStartProfile();
+
 
   const { tasks, setTasks, loading } = useTodo();
 

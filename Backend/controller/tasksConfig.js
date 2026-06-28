@@ -1,7 +1,7 @@
 const Task = require("../models/Task");
 const postTasks = async (req, res) => {
   try {
-    const { title, priority, date } = req.body;
+    const { title, priority, date, tag} = req.body;
     if (!title || !priority) {
       return res.status(400).json({ message: "Invalid input" });
     }
@@ -14,6 +14,7 @@ const postTasks = async (req, res) => {
       priority,
       date: date || new Date().toISOString().split("T")[0],
       complete: false,
+      tag,
       userId: req.session.userId,
     });
 
@@ -100,13 +101,14 @@ const completeTasks = async (req, res) => {
 const editTasks = async (req, res) => {
   try {
     const { taskId } = req.params;
-    const { title, priority, date } = req.body;
+    const { title, priority, date, tag } = req.body;
 
     const updatedTask = await Task.findByIdAndUpdate(
       { _id: taskId, userId: req.session.userId },
       {
         title,
         priority,
+        tag,
         date: date || new Date().toISOString().split("T")[0],
       },
     );

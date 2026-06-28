@@ -55,10 +55,10 @@ const taskSchema = new mongoose.Schema(
     },
 
     // Custom Tags
-    tag:{
-        type: String,
-        trim: true,
-      },
+    tag: {
+      type: String,
+      default: "",
+    },
 
     // Recurring Tasks
     // recurring: {
@@ -72,7 +72,7 @@ const taskSchema = new mongoose.Schema(
     //   type: Number,
     //   default: 0,
     // },
-
+    
     // Subtasks
     subtasks: [
       {

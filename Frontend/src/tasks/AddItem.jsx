@@ -46,7 +46,7 @@ function AddItem() {
         priority: form.priority.toLowerCase(),
         complete: form.complete,
         date: form.date,
-        tags: form.tag ? [form.tag] : [],
+        tag: form.tag,
       });
 
       if (response.status === 201) {
