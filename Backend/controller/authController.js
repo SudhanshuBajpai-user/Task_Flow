@@ -1,9 +1,15 @@
 const User = require("../models/User");
 const bcrypt = require("bcrypt");
+const { validateSignupData } = require("../utils/validation");
 
 const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
+    const validation = validateSignupData({ name, email, password });
+
+    if (!validation.isValid) {
+      return res.status(400).json({ message: "Invalid input", errors: validation.errors });
+    }
 
     const existingUser = await User.findOne({ email });
 

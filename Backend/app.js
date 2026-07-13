@@ -41,7 +41,7 @@ app.use("/",authRouter);
 app.use("/tasks",tasksRouter)
 
 
-PORT=5000;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
     console.log(`Server running on address http://localhost:${PORT}`);
 });

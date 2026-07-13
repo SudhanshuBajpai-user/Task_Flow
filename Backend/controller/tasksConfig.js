@@ -1,9 +1,13 @@
 const Task = require("../models/Task");
+const { validateTaskData } = require("../utils/validation");
+
 const postTasks = async (req, res) => {
   try {
     const { title, priority, date, tag} = req.body;
-    if (!title || !priority) {
-      return res.status(400).json({ message: "Invalid input" });
+    const validation = validateTaskData({ title, priority });
+
+    if (!validation.isValid) {
+      return res.status(400).json({ message: "Invalid input", errors: validation.errors });
     }
     if (!req.session.userId) {
       return res.status(401).json({ message: "Unauthorized" });
