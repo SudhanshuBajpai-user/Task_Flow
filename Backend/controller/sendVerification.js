@@ -32,7 +32,7 @@ const sendVerification = async (req, res) => {
       expiresAt: new Date(Date.now() + 20 * 60 * 1000),
     });
 
-    const link = `http://localhost:5173/verify-email/${token}`;
+  const link = `${process.env.FRONTEND_URL}/verify-email/${token}`;
 
     await sendMail({
       to: user.email,
